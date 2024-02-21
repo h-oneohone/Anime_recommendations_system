@@ -27,4 +27,3 @@ def create_anime_series(db: Session, anime: schemas.AnimeSeriesCreate):
 def get_anime_series(db: Session, anime_id: int):
     return db.query(AnimeSeries).filter(AnimeSeries.anime_id == anime_id).first()
 
-# Add more CRUD operations as needed
