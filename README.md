@@ -7,11 +7,6 @@
 * `os`
 * `zipfile`
 
-# Download dataset
-```
-python loading_dataset.py
-```
-
 # Usage
 ```python
 from agent import Agent
