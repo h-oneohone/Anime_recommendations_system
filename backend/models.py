@@ -13,7 +13,7 @@ class AnimeSeries(Base):
     __tablename__ = "anime_series"
     anime_id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), index=True)  # Specified length here
-    image = Column(String(255))  # And here
+    image = Column(String(1024))  # base64 encoding
     publisher = Column(String(255))  # And here
     description = Column(String(1024))  # Assuming descriptions might be longer
 
