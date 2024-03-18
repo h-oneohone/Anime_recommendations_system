@@ -2,7 +2,7 @@
 ## Python module
 * `scipy`
 * `numpy`
-* `gdown`
+* `gdown==4.7.3`
 * `pandas`
 * `os`
 * `zipfile`
