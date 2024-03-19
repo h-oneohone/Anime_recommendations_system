@@ -1,5 +1,5 @@
 {
-  "name": "furniture",
+  "name": "map_vn",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
+    "0.0.0.0": "^0.0.1-pre.alpha.1",
+    "axios": "^1.5.0",
     "core-js": "^3.8.3",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
