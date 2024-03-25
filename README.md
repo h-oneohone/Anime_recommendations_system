@@ -13,13 +13,31 @@ from agent import Agent
 agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
 
 # Get k recommended animes by id
-print(agent.act(id=813, k=10))
+print(agent.find_similar_animes(id=813, k=10))
 
 # Get k recommended animes by name
-print(agent.act(name='Dragon Ball Z', k=10))
+print(agent.find_similar_animes(name='Dragon Ball Z', k=10))
 
 # Get DataFrame result
-print(agent.act(name='Dragon Ball Z', k=10, return_df=True))
+print(agent.find_similar_animes(name='Dragon Ball Z', k=10, return_df=True))
+
+# Get top_k * num_animes recommend_animes using watched_episodes attribute by user_id, return id result
+print(agent.find_anime_for_user_using_episode(id=0, top_k=5, num_animes=4))
+
+# Get top_k * num_animes recommend_animes using watched_episodes attribute by user_id, return name result
+print(agent.find_anime_for_user_using_episode(id=0, top_k=5, num_animes=4, return_name=True))
+
+# Get top_k * num_animes recommend_animes using watched_episodes attribute by user_id, return DataFrame result
+print(agent.find_anime_for_user_using_episode(id=0, top_k=5, num_animes=4, return_df=True))
+
+# Get top_k * num_animes recommend_animes using rating attribute by user_id, return id result
+print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
+
+# Get top_k * num_animes recommend_animes using rating attribute by user_id, return name result
+print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4, return_name=True))
+
+# Get top_k * num_animes recommend_animes using rating attribute by user_id, return DataFrame result
+print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
 ```
 
 # Algorithm Tutorial
