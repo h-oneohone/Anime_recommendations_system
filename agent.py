@@ -31,7 +31,7 @@ class Agent():
         self.anime_rating_embedding = scipy.sparse.load_npz(weight_path + '/anime_rating_embedding.npz')
 
 
-    def find_similar_anime(self, id: int = None, name: str = None, k=10, return_df=False):
+    def find_similar_animes(self, id: int = None, name: str = None, k=10, return_df=False):
         if isinstance(id, int):
             index = self.anime_df[self.anime_df.MAL_ID == id].index[0]
         elif isinstance(name, str):
