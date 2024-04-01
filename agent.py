@@ -56,7 +56,7 @@ class Agent():
 
         index_res = []
         for anime_index in anime_indexes:
-            index_res += self.find_similar_anime(id=int(self.anime_index[int(anime_index)]), k=num_animes)
+            index_res += self.find_similar_animes(id=int(self.anime_index[int(anime_index)]), k=num_animes)
         
         if return_df:
             return self.anime_df.loc[self.anime_df['MAL_ID'].isin(index_res)]
@@ -77,7 +77,7 @@ class Agent():
 
         index_res = []
         for anime_index in anime_indexes:
-            index_res += self.find_similar_anime(id=int(self.anime_index[int(anime_index)]), k=num_animes)
+            index_res += self.find_similar_animes(id=int(self.anime_index[int(anime_index)]), k=num_animes)
         
         if return_df:
             return self.anime_df.loc[self.anime_df['MAL_ID'].isin(index_res)]
