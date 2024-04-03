@@ -42,3 +42,7 @@ print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
 
 # Algorithm Tutorial
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14RzLFOnpWyvpsUsygTfF5HB29xyopL-x?usp=sharing)
+
+# Dataset
+## Cropped dataset
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1CYjnad4Qmc5wx9BpXKcbHMbHE18iQNOa?usp=sharing)
