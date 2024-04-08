@@ -46,7 +46,7 @@ print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
 ## FP-growth
 
 <p align=center>
-    <img src="assets/fpgrowth.png" width="936" height="606">
+    <img src="assets/fpgrowth.png" width="702" height="455">
 </p>
 
 ```python
