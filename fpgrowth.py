@@ -1,7 +1,8 @@
-# @title
 from csv import reader
 from itertools import chain, combinations
 from collections import defaultdict, OrderedDict
+from tqdm import tqdm
+
 class Node:
     def __init__(self, itemName, frequency, parentNode):
         self.itemName = itemName
@@ -21,7 +22,7 @@ class Node:
 def constructTree(itemSetList, frequency, minSup):
     headerTable = defaultdict(int)
     # Counting frequency and create header table
-    for idx, itemSet in enumerate(itemSetList):
+    for idx, itemSet in enumerate(tqdm(itemSetList)):
         for item in itemSet:
             headerTable[item] += frequency[idx]
 
@@ -37,7 +38,7 @@ def constructTree(itemSetList, frequency, minSup):
     # Init Null head node
     fpTree = Node('Null', 1, None)
     # Update FP tree for each cleaned and sorted itemSet
-    for idx, itemSet in enumerate(itemSetList):
+    for idx, itemSet in enumerate(tqdm(itemSetList)):
         itemSet = [item for item in itemSet if item in headerTable]
         itemSet.sort(key=lambda item: headerTable[item][0], reverse=True)
         # Traverse from root to leaf, update tree with given item
@@ -94,22 +95,23 @@ def findPrefixPath(basePat, headerTable):
     return condPats, frequency
 
 def mineTree(headerTable, minSup, preFix, freqItemList):
-    # Sort the items with frequency and create a list
-    sortedItemList = [item[0] for item in sorted(list(headerTable.items()), key=lambda p:p[1][0])]
-    # Start with the lowest frequency
-    for item in sortedItemList:
-        # Pattern growth is achieved by the concatenation of suffix pattern with frequent patterns generated from conditional FP-tree
-        newFreqSet = preFix.copy()
-        newFreqSet.add(item)
-        freqItemList.append(newFreqSet)
-        # Find all prefix path, constrcut conditional pattern base
-        conditionalPattBase, frequency = findPrefixPath(item, headerTable)
-        # Construct conditonal FP Tree with conditional pattern base
-        conditionalTree, newHeaderTable = constructTree(conditionalPattBase, frequency, minSup)
-        if newHeaderTable != None:
-            # Mining recursively on the tree
-            mineTree(newHeaderTable, minSup,
-                       newFreqSet, freqItemList)
+    stack = [(headerTable, minSup, preFix)]
+
+    while stack:
+        headerTable, minSup, preFix = stack.pop()
+        
+        sortedItemList = [item[0] for item in sorted(list(headerTable.items()), key=lambda p: p[1][0], reverse=True)]
+        
+        for item in sortedItemList:
+            newFreqSet = preFix.copy()
+            newFreqSet.add(item)
+            freqItemList.append(newFreqSet)
+
+            conditionalPattBase, frequency = findPrefixPath(item, headerTable)
+            conditionalTree, newHeaderTable = constructTree(conditionalPattBase, frequency, minSup)
+
+            if newHeaderTable:
+                stack.append((newHeaderTable, minSup, newFreqSet))
 
 def powerset(s):
     return chain.from_iterable(combinations(s, r) for r in range(1, len(s)))
@@ -147,4 +149,3 @@ def fpgrowth(itemSetList, minSupRatio, minConf):
         mineTree(headerTable, minSup, set(), freqItems)
         rules = associationRule(freqItems, itemSetList, minConf)
         return freqItems, rules
-
