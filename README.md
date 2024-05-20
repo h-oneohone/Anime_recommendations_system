@@ -78,11 +78,14 @@ print(agent.find_anime_for_user_using_fpgrowth(id=12, return_df=True))
 
 # Algorithm Tutorial
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14RzLFOnpWyvpsUsygTfF5HB29xyopL-x?usp=sharing)
+
 # Hashtree
-[![Colab](https://colab.research.google.com/drive/1-LTgmARJj-gpRQFYD-k0-ofFnE0e0uL5?usp=sharing#scrollTo=Yn0ZSK7sgbUf)
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1-LTgmARJj-gpRQFYD-k0-ofFnE0e0uL5?usp=sharing#scrollTo=Yn0ZSK7sgbUf)
+
 # Dataset
 [![Kaggle](https://img.shields.io/badge/Kaggle-035a7d?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/datasets/hernan4444/anime-recommendation-database-2020)
 
 ## Cropped dataset
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1CYjnad4Qmc5wx9BpXKcbHMbHE18iQNOa?usp=sharing)
-[data+name](https://drive.google.com/drive/folders/1KfSMMcVeuBAycFdKLDF-XTvP7s96YP8t?usp=sharing)
+
+[![Data+name_anime](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1KfSMMcVeuBAycFdKLDF-XTvP7s96YP8t?usp=sharing)
