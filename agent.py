@@ -6,6 +6,10 @@ import zipfile
 from tqdm import tqdm
 from functools import cmp_to_key
 from fpgrowth import fpgrowth
+from fpgrowth import associationRule
+from mlxtend.preprocessing import TransactionEncoder
+from apriori_hash_tree import apriori_student
+from apriori import runApriori
 
 import os
 os.environ['KAGGLE_USERNAME'] = "minhduyl"
@@ -14,23 +18,24 @@ import kaggle
 kaggle.api.authenticate()
 
 class Agent():
-    def __init__(self, dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True):
-
-        if not os.path.exists(dataset_path) and download_dataset:
-            kaggle.api.dataset_download_files('hernan4444/anime-recommendation-database-2020', path=dataset_path, unzip=True, quiet=False)
-
-        if not os.path.exists(weight_path) and download_weight:
-            kaggle.api.dataset_download_files('duyminhle/anime-recommendation-system-weight', path=weight_path, unzip=True, quiet=False)
-
-        self.weight = np.load(weight_path + '/weight.npy')
-        self.anime_index = np.load(weight_path + '/anime_index.npy')
-        self.anime_df = pd.read_csv(dataset_path + '/anime.csv')
-        self.anime_df = self.anime_df.loc[self.anime_df['MAL_ID'].isin(self.anime_index)]
-        self.anime_df = self.anime_df.sort_values(by=['MAL_ID'])
-        self.episode_embedding = scipy.sparse.load_npz(weight_path + '/episode_embedding.npz')
-        self.user_index = np.load(weight_path + '/user_index.npy')
-        self.anime_rating_embedding = scipy.sparse.load_npz(weight_path + '/anime_rating_embedding.npz')
-        self.user_item_matrix = self.anime_rating_embedding.transpose()
+    def __init__(self, dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True, custom_dataset=False):
+        
+        if not custom_dataset:
+            if not os.path.exists(dataset_path) and download_dataset:
+                kaggle.api.dataset_download_files('hernan4444/anime-recommendation-database-2020', path=dataset_path, unzip=True, quiet=False)
+    
+            if not os.path.exists(weight_path) and download_weight:
+                kaggle.api.dataset_download_files('duyminhle/anime-recommendation-system-weight', path=weight_path, unzip=True, quiet=False)
+    
+            self.weight = np.load(weight_path + '/weight.npy')
+            self.anime_index = np.load(weight_path + '/anime_index.npy')
+            self.anime_df = pd.read_csv(dataset_path + '/anime.csv')
+            self.anime_df = self.anime_df.loc[self.anime_df['MAL_ID'].isin(self.anime_index)]
+            self.anime_df = self.anime_df.sort_values(by=['MAL_ID'])
+            self.episode_embedding = scipy.sparse.load_npz(weight_path + '/episode_embedding.npz')
+            self.user_index = np.load(weight_path + '/user_index.npy')
+            self.anime_rating_embedding = scipy.sparse.load_npz(weight_path + '/anime_rating_embedding.npz')
+            self.user_item_matrix = self.anime_rating_embedding.transpose()
 
     def build_itemSetList(self, num_users=20000, num_animes=1000):
         dataset = self.user_item_matrix[:num_users, :num_animes]
@@ -39,9 +44,35 @@ class Agent():
         self.itemSetList = np.split(nonzero_indices[:,1], np.unique(nonzero_indices[:, 0], return_index=True)[1][1:])
         self.itemSetList = list(map(lambda x: self.anime_index[x].tolist(), self.itemSetList))
 
+    def build_itemSetList_sorted(self, num_users=20000, num_animes=1000):
+        dataset = self.user_item_matrix[:, :num_animes]
+        nonzero_indices = dataset.nonzero()
+        nonzero_indices = np.concatenate((nonzero_indices[0].reshape(1, -1), nonzero_indices[1].reshape(1, -1)), axis=0).transpose()
+        self.itemSetList = np.split(nonzero_indices[:,1], np.unique(nonzero_indices[:, 0], return_index=True)[1][1:])
+        self.itemSetList = sorted(list(map(lambda x: self.anime_index[x].tolist(), self.itemSetList)), key=cmp_to_key(lambda item1, item2: len(item2) - len(item1)))[:num_users]
+
     def build_fpgrowth(self, minSup=0.12, minConf=0.5):
         self.freqItemSet_fpgrowth, self.rules_fpgrowth = fpgrowth(self.itemSetList, minSupRatio=minSup, minConf=minConf)
         self.rules_fpgrowth = sorted(self.rules_fpgrowth, key=cmp_to_key(lambda item1, item2: item2[2] - item1[2]))
+
+    def build_apriori_hash_tree(self, minSup=0.12, minConf=0.5):
+        te = TransactionEncoder()
+        te_array = te.fit_transform(self.itemSetList, sparse=True)
+        sparse_df = pd.DataFrame.sparse.from_spmatrix(te_array, columns=te.columns_)
+        frequent_itemsets = apriori_student(sparse_df, self.itemSetList, te_array, min_support=minSup)
+        self.freqItemSet_apriori_hash_tree = [set(i) for i in list(frequent_itemsets['itemsets'])]
+        self.rules_apriori_hash_tree = associationRule(self.freqItemSet_apriori_hash_tree, self.itemSetList, minConf)
+        self.rules_apriori_hash_tree = sorted(self.rules_apriori_hash_tree, key=cmp_to_key(lambda item1, item2: item2[2] - item1[2]))
+
+    def build_apriori(self, minSup=0.12, minConf=0.5):
+        self.freqItemSet_apriori, rules_apriori = runApriori(self.itemSetList, minSup, minConf)
+        self.rules_apriori = []
+        for i in rules_apriori:
+            data = []
+            data.append(set(i[0][0]))
+            data.append(set(i[0][1]))
+            data.append(i[1])
+            self.rules_apriori.append(data)
 
     def find_similar_animes(self, id: int = None, name: str = None, k=10, return_df=False):
         if isinstance(id, int):
