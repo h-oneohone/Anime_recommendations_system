@@ -44,6 +44,70 @@ print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4, return
 # Get top_k * num_animes recommend_animes using rating attribute by user_id, return DataFrame result
 print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
 ```
+
+## Apriori
+```python
+from agent import Agent
+agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
+agent.build_itemSetList(num_users=20000, num_animes=1000) # max num_users=313670, num_animes=17172
+agent.build_apriori(minSup=0.12, minConf=0.5)
+# Get all rules of FP-growth algorithm by name
+for rule in agent.rules_apriori:
+    print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[0]))]['Name'].tolist(), end=' ')
+    print('--->', end=' ')
+    print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[1]))]['Name'].tolist(), end=' ')
+    print(rule[2])
+```
+Custom dataset
+```python
+from agent import Agent
+agent = Agent(custom_dataset=True)
+agent.itemSetList = [
+        ['M', 'O', 'N', 'K', 'E', 'Y'],
+        ['D', 'O', 'N', 'K', 'E', 'Y'],
+        ['M', 'A', 'K', 'E'],
+        ['M', 'U', 'C', 'K', 'Y'],
+        ['C', 'O', 'O', 'K', 'I', 'E']
+    ]
+agent.build_apriori(minSup=0.6, minConf=0.8)
+for i in agent.freqItemSet_apriori:
+    print(i)
+for i in agent.rules_apriori:
+    print(i)
+```
+
+
+## Apriori Hash Tree
+```python
+from agent import Agent
+agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
+agent.build_itemSetList(num_users=20000, num_animes=1000) # max num_users=313670, num_animes=17172
+agent.build_apriori_hash_tree(minSup=0.12, minConf=0.5)
+# Get all rules of FP-growth algorithm by name
+for rule in agent.rules_apriori_hash_tree:
+    print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[0]))]['Name'].tolist(), end=' ')
+    print('--->', end=' ')
+    print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[1]))]['Name'].tolist(), end=' ')
+    print(rule[2])
+```
+Custom dataset
+```python
+from agent import Agent
+agent = Agent(custom_dataset=True)
+agent.itemSetList = [
+        ['M', 'O', 'N', 'K', 'E', 'Y'],
+        ['D', 'O', 'N', 'K', 'E', 'Y'],
+        ['M', 'A', 'K', 'E'],
+        ['M', 'U', 'C', 'K', 'Y'],
+        ['C', 'O', 'O', 'K', 'I', 'E']
+    ]
+agent.build_apriori_hash_tree(minSup=0.6, minConf=0.8)
+for i in agent.freqItemSet_apriori_hash_tree:
+    print(i)
+for i in agent.rules_apriori_hash_tree:
+    print(i)
+```
+
 ## FP-growth
 
 <p align=center>
