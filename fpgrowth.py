@@ -26,11 +26,13 @@ class Node:
         for child in list(self.children.values()):
             if self.itemName != child.itemName:
                 path = self.path + '/' + str(child.itemName)
-            else: path = self.path
+            else:
+                path = self.path
             child.path = path
             if path not in viz_tree_dict.keys():
-                viz_tree_dict[path] = {'count': 1}
-            else: viz_tree_dict[path]['count'] += 1
+                viz_tree_dict[path] = {'count': child.count}
+            else:
+                viz_tree_dict[path]['count'] += child.count
             child.visualize()
 
 def constructTree(itemSetList, frequency, minSup):
