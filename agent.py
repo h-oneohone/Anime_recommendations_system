@@ -73,6 +73,7 @@ class Agent():
             data.append(set(i[0][1]))
             data.append(i[1])
             self.rules_apriori.append(data)
+        self.rules_apriori = sorted(self.rules_apriori, key=cmp_to_key(lambda item1, item2: item2[2] - item1[2]))
 
     def find_similar_animes(self, id: int = None, name: str = None, k=10, return_df=False):
         if isinstance(id, int):
