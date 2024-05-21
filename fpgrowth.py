@@ -164,6 +164,7 @@ def fpgrowth(itemSetList, minSupRatio, minConf, visualize=False):
     fpTree, headerTable = constructTree(itemSetList, frequency, minSup)
     if(fpTree == None):
         print('No frequent item set')
+        return [], []
     else:
         fpTree.visualize()
         if visualize:
