@@ -141,6 +141,121 @@ print(agent.find_anime_for_user_using_fpgrowth(id=12, return_name=True))
 print(agent.find_anime_for_user_using_fpgrowth(id=12, return_df=True))
 ```
 
+# Demo
+## Time implement
+```python
+import time
+import matplotlib.pyplot as plt
+from agent import Agent
+
+# Khởi tạo agent
+agent.build_itemSetList(num_users=2000, num_animes=100) # max num_users=313670, num_animes=17172
+
+# Danh sách các giá trị minSup
+minSup_values = [i/100 for i in range(5, 81, 5)]
+memory_usage = []
+execution_time_apriori = []
+execution_time_apriori_hash_tree = []
+execution_time_fpgrowth = []
+
+for minSup in minSup_values:
+    start_time = time.time()
+    
+    agent.build_apriori_hash_tree(minSup=minSup, minConf=0.8)
+    
+    end_time = time.time()
+    
+    execution_time_apriori_hash_tree.append(end_time - start_time)
+
+for minSup in minSup_values:
+    start_time = time.time()
+    
+    agent.build_apriori(minSup=minSup, minConf=0.8)
+    
+    end_time = time.time()
+    
+    execution_time_apriori.append(end_time - start_time)
+
+for minSup in minSup_values:
+    start_time = time.time()
+    
+    agent.build_fpgrowth(minSup=minSup, minConf=0.8)
+    
+    end_time = time.time()
+    
+    execution_time_fpgrowth.append(end_time - start_time)
+
+# Vẽ biểu đồ bộ nhớ sử dụng
+plt.figure(figsize=(12, 6))
+
+plt.plot(minSup_values, execution_time_apriori, marker='o', linestyle='-', label='apriori')
+plt.plot(minSup_values, execution_time_apriori_hash_tree, marker='o', linestyle='-', label='apriori_hash_tree')
+plt.plot(minSup_values, execution_time_fpgrowth, marker='o', linestyle='-', label='fpgrowth')
+plt.legend()
+plt.xlabel('minSup')
+plt.ylabel('Execution Time (seconds)')
+plt.title('Execution Time vs minSup')
+
+plt.tight_layout()
+plt.show()
+```
+## Time library
+```python
+from mlxtend.frequent_patterns import fpgrowth
+from mlxtend.frequent_patterns import apriori
+from mlxtend.preprocessing import TransactionEncoder
+import pandas as pd
+import time
+import matplotlib.pyplot as plt
+from agent import Agent
+
+# Khởi tạo agent
+agent.build_itemSetList(num_users=2000, num_animes=100) # max num_users=313670, num_animes=17172
+
+# Dữ liệu mẫu: danh sách các giỏ hàng
+dataset = agent.itemSetList
+
+
+# Chuyển đổi dữ liệu thành dạng one-hot encoding
+te = TransactionEncoder()
+te_ary = te.fit(dataset).transform(dataset)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+
+minSup_values = [i/100 for i in range(5, 81, 5)]
+execution_time_apriori = []
+execution_time_apriori_hash_tree = []
+execution_time_fpgrowth = []
+
+for minSup in minSup_values:
+    start_time = time.time()
+    
+    apriori(df, min_support=minSup, use_colnames=True)
+    
+    end_time = time.time()
+    
+    execution_time_apriori.append(end_time - start_time)
+
+for minSup in minSup_values:
+    start_time = time.time()
+    
+    fpgrowth(df, min_support=minSup, use_colnames=True)
+    
+    end_time = time.time()
+    
+    execution_time_fpgrowth.append(end_time - start_time)
+
+plt.plot(minSup_values, execution_time_apriori, marker='o', linestyle='-', label='apriori')
+plt.plot(minSup_values, execution_time_fpgrowth, marker='o', linestyle='-', label='fpgrowth')
+plt.legend()
+plt.xlabel('minSup')
+plt.ylabel('Execution Time (seconds)')
+plt.title('Execution Time vs minSup')
+
+plt.tight_layout()
+plt.show()
+```
+
 # Algorithm Tutorial
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14RzLFOnpWyvpsUsygTfF5HB29xyopL-x?usp=sharing)
 
