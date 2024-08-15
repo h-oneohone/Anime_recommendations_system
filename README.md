@@ -1,3 +1,4 @@
+# BTL môn kho dữ liệu và khai phá dữ liệu PTIT - cô Chi (9đ cuối kì ^^)
 # Package
 ## Python module
 * `scipy`
