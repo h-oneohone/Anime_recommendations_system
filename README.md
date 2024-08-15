@@ -1,19 +1,23 @@
 # BTL môn kho dữ liệu và khai phá dữ liệu PTIT - cô Chi (9đ cuối kì ^^)
 # Package
+
 ## Python module
-* `scipy`
-* `numpy`
-* `kaggle`
-* `pandas`
-* `os`
-* `zipfile`
-* `tqdm`
-* `itertools`
-* `collections`
-* `functools`
+
+- `scipy`
+- `numpy`
+- `kaggle`
+- `pandas`
+- `os`
+- `zipfile`
+- `tqdm`
+- `itertools`
+- `collections`
+- `functools`
 
 # Usage
+
 ## Collaborative Filtering
+
 ```python
 from agent import Agent
 agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
@@ -47,6 +51,7 @@ print(agent.find_anime_for_user_using_rating(id=0, top_k=5, num_animes=4))
 ```
 
 ## Apriori
+
 ```python
 from agent import Agent
 agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
@@ -59,7 +64,9 @@ for rule in agent.rules_apriori:
     print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[1]))]['Name'].tolist(), end=' ')
     print(rule[2])
 ```
+
 Custom dataset
+
 ```python
 from agent import Agent
 agent = Agent(custom_dataset=True)
@@ -77,8 +84,8 @@ for i in agent.rules_apriori:
     print(i)
 ```
 
-
 ## Apriori Hash Tree
+
 ```python
 from agent import Agent
 agent = Agent(dataset_path='dataset', weight_path='weight', download_dataset=True, download_weight=True)
@@ -91,7 +98,9 @@ for rule in agent.rules_apriori_hash_tree:
     print(agent.anime_df.loc[agent.anime_df['MAL_ID'].isin(list(rule[1]))]['Name'].tolist(), end=' ')
     print(rule[2])
 ```
+
 Custom dataset
+
 ```python
 from agent import Agent
 agent = Agent(custom_dataset=True)
@@ -141,16 +150,24 @@ print(agent.find_anime_for_user_using_fpgrowth(id=12, return_name=True))
 print(agent.find_anime_for_user_using_fpgrowth(id=12, return_df=True))
 ```
 
+# Run backend app
+
+uvicorn main:app --reload --host localhost --port 8000
+
 # Algorithm Tutorial
+
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14RzLFOnpWyvpsUsygTfF5HB29xyopL-x?usp=sharing)
 
 # Hashtree
+
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1-LTgmARJj-gpRQFYD-k0-ofFnE0e0uL5?usp=sharing#scrollTo=Yn0ZSK7sgbUf)
 
 # Dataset
+
 [![Kaggle](https://img.shields.io/badge/Kaggle-035a7d?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/datasets/hernan4444/anime-recommendation-database-2020)
 
 ## Cropped dataset
+
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1CYjnad4Qmc5wx9BpXKcbHMbHE18iQNOa?usp=sharing)
 
 [![Data+name_anime](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1KfSMMcVeuBAycFdKLDF-XTvP7s96YP8t?usp=sharing)
